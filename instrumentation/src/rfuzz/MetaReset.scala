@@ -7,11 +7,14 @@ import firrtl._
 import firrtl.analyses.InstanceGraph
 import firrtl.ir._
 import firrtl.passes.RemoveValidIf
+import firrtl.stage.TransformManager.TransformDependency
 
 // Add a meta-reset to all registers
-class AddMetaResetTransform extends Transform {
-  def inputForm = LowForm
-  def outputForm = LowForm
+class AddMetaResetTransform extends Transform with DependencyAPIMigration {
+  override def prerequisites = firrtl.stage.Forms.LowForm
+  override def optionalPrerequisites = firrtl.stage.Forms.LowFormOptimized
+  override def optionalPrerequisiteOf: Seq[TransformDependency] = firrtl.stage.Forms.LowEmitters
+  override def invalidates(a: Transform): Boolean = false
 
   val metaResetPort = Port(NoInfo, "metaReset", Input, Utils.BoolType)
   val metaResetInput = WRef(metaResetPort.name, metaResetPort.tpe, PortKind, SourceFlow)

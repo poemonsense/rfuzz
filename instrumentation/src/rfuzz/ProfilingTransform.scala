@@ -6,7 +6,9 @@ import firrtl.Utils.{BoolType, get_info}
 import firrtl._
 import firrtl.annotations._
 import firrtl.ir._
+import firrtl.options.Dependency
 import firrtl.passes.wiring.{SinkAnnotation, SourceAnnotation}
+import firrtl.stage.TransformManager.TransformDependency
 
 import scala.collection.mutable
 
@@ -27,9 +29,13 @@ case class DoNotProfileModule(target: ModuleName) extends SingleTargetAnnotation
   * Cover points are expected to be of the form: printf(..., "COVER:..." signal)
   * Assertions are expected to be of the form: printf(..., "Assertion...")
   */
-class ProfilingTransform extends Transform {
-  def inputForm = LowForm
-  def outputForm = MidForm
+class ProfilingTransform extends Transform with DependencyAPIMigration {
+  override def prerequisites: Seq[TransformDependency] = Seq(Dependency[rfuzz.SplitMuxConditions])
+  override def optionalPrerequisiteOf: Seq[TransformDependency] = firrtl.stage.Forms.LowEmitters
+  override def invalidates(a: Transform): Boolean = a match {
+    case _ : firrtl.passes.wiring.WiringTransform => true
+    case _                                        => false
+  }
 
   import ProfilingTransform._
 

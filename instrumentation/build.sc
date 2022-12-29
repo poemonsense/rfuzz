@@ -3,9 +3,9 @@ import scalalib._
 import publish._
 
 object ivys {
-  val sv = "2.12.12"
-  val chisel3 = ivy"edu.berkeley.cs::chisel3:3.4.3"
-  val chisel3Plugin = ivy"edu.berkeley.cs:::chisel3-plugin:3.4.3"
+  val sv = "2.12.17"
+  val chisel3 = ivy"edu.berkeley.cs::chisel3:3.5.5"
+  val chisel3Plugin = ivy"edu.berkeley.cs:::chisel3-plugin:3.5.5"
   val macroParadise = ivy"org.scalamacros:::paradise:2.1.1"
 }
 

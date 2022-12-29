@@ -7,6 +7,7 @@ import firrtl._
 import firrtl.annotations._
 import firrtl.ir._
 import firrtl.passes.MemPortUtils.memType
+import firrtl.stage.TransformManager.TransformDependency
 
 import scala.collection.mutable
 
@@ -49,9 +50,10 @@ object ReplaceMemsTransform {
   * @note Assumes that clocks on all mem ports are the same (generally safe assumption)
   * @note Assumes that wrapping Module has a port named "reset"
   */
-class ReplaceMemsTransform extends Transform {
-  def inputForm = LowForm
-  def outputForm = HighForm
+class ReplaceMemsTransform extends Transform with DependencyAPIMigration {
+  override def prerequisites: Seq[TransformDependency] = firrtl.stage.Forms.MidForm
+  override def optionalPrerequisiteOf: Seq[TransformDependency] = firrtl.stage.Forms.MidEmitters
+  override def invalidates(a: Transform): Boolean = false
 
   import ReplaceMemsTransform._
 

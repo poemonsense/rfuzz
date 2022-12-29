@@ -3,15 +3,18 @@ package rfuzz
 import firrtl.Mappers._
 import firrtl._
 import firrtl.ir._
+import firrtl.stage.TransformManager.TransformDependency
 
 import scala.collection.mutable
 
 // Removes compound expressions from mux conditions
 // Ensures they are a reference
 // Borrows from Firrtl's SplitExpressions
-class SplitMuxConditions extends Transform {
-  def inputForm = MidForm
-  def outputForm = MidForm
+class SplitMuxConditions extends Transform with DependencyAPIMigration {
+  override def prerequisites: Seq[TransformDependency] = firrtl.stage.Forms.LowForm
+  override def optionalPrerequisites = firrtl.stage.Forms.LowFormOptimized
+  override def optionalPrerequisiteOf: Seq[TransformDependency] = firrtl.stage.Forms.LowEmitters
+  override def invalidates(a: Transform): Boolean = false
 
   private def isRef(expr: Expression): Boolean = expr match {
     case ref @ (_: WRef | _: WSubField | _: WSubIndex) => true
