@@ -40,7 +40,6 @@ SPACE := $(EMPTY) $(EMPTY)
 COMMA := ,
 FIRRTL_TRANSFORMS := \
 	rfuzz.NoDedupTransform \
-	rfuzz.ReplaceMemsTransform \
 	rfuzz.SplitMuxConditions \
 	rfuzz.ProfilingTransform \
 	firrtl.passes.wiring.WiringTransform \
