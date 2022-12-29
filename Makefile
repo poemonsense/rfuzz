@@ -26,12 +26,12 @@ default: $(VERILATOR_HARNESS)
 # gobal clean
 ################################################################################
 clean:
-	rm -rf build/*
-	rm -rf harness/*.anno
-	rm -rf harness/*.fir
-	rm -rf harness/*.v
-	rm -rf harness/*.f
-	rm -rf harness/test_run_dir
+	@rm -rf build/*
+	@rm -rf harness/*.anno
+	@rm -rf harness/*.fir
+	@rm -rf harness/*.v
+	@rm -rf harness/*.f
+	@rm -rf harness/test_run_dir
 
 ################################################################################
 # instrumentation rules
@@ -59,7 +59,7 @@ lookup_scala_srcs = $(shell find $(1)/ -iname "*.scala" 2> /dev/null)
 
 
 FIRRTL_CMD = firrtl.stage.FirrtlMain -i $< -o $(DUT)     \
-	-X verilog -E low -E verilog -ll info                \
+	-X verilog -E low -E verilog                         \
 	-fct $(subst $(SPACE),$(COMMA),$(FIRRTL_TRANSFORMS)) \
 	$(ANNO_CMD)
 
@@ -69,10 +69,11 @@ ifeq ($(USE_SBT),1)
 else
 	cd instrumentation && mill -i rfuzz.runMain $(FIRRTL_CMD)
 endif
-	mkdir -p $(BUILD)
-	mv instrumentation/$(DUT).toml $(INSTRUMENTATION_TOML)
-	mv instrumentation/$(DUT).lo.fir $(INSTRUMENTED_FIR)
-	mv instrumentation/$(DUT).v $(INSTRUMENTED_V)
+	@mkdir -p $(BUILD)
+	@mv instrumentation/$(DUT).toml $(INSTRUMENTATION_TOML)
+	@mv instrumentation/$(DUT).lo.fir $(INSTRUMENTED_FIR)
+	@mv instrumentation/$(DUT).v $(INSTRUMENTED_V)
+	@rm -f instrumentation/IgnoreMe.fir instrumentation/IgnoreMe.anno.json
 
 instrumentation: $(INSTRUMENTED_V) $(INSTRUMENTED_FIR) $(INSTRUMENTATION_TOML)
 
