@@ -3,8 +3,9 @@ import scalalib._
 import publish._
 
 object ivys {
-  val sv = "2.12.10"
-  val chisel3 = ivy"edu.berkeley.cs::chisel3:3.3.2"
+  val sv = "2.12.12"
+  val chisel3 = ivy"edu.berkeley.cs::chisel3:3.4.3"
+  val chisel3Plugin = ivy"edu.berkeley.cs:::chisel3-plugin:3.4.3"
   val macroParadise = ivy"org.scalamacros:::paradise:2.1.1"
 }
 
@@ -20,7 +21,7 @@ object rfuzz extends ScalaModule with PublishModule with SbtModule {
 
   override def compileIvyDeps = Agg(ivys.macroParadise)
 
-  override def scalacPluginIvyDeps = Agg(ivys.macroParadise)
+  override def scalacPluginIvyDeps = Agg(ivys.macroParadise, ivys.chisel3Plugin)
 
   override def scalacOptions = Seq("-Xsource:2.11")
 

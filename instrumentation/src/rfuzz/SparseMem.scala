@@ -66,7 +66,10 @@ class SparseMem[T <: Data]
     Mux(valid && en, mem(addrIdx), 0.U.asTypeOf(dataType))
   }
 
-  val readers = if (syncRead) RegNext(io.r) else io.r
+  val readers = if (syncRead) {
+    val readers = Reg(Output(chiselTypeOf(io.r)))
+    readers := io.r
+  } else io.r
 
   for (r <- io.r) {
     r.data := read(r.en, r.addr)
@@ -89,7 +92,7 @@ class SparseMem[T <: Data]
       maybe.evidence match {
         case Some(ev) =>
           implicit val evidence = ev
-          mem.write(addr, w.data, w.mask.asUInt.toBools)
+          mem.write(addr, w.data, w.mask.asUInt.asBools)
         case None =>
           mem.write(addr, w.data)
       }
@@ -102,4 +105,3 @@ class SparseMem[T <: Data]
   assert(nextAddrUpdate <= depth.U,
     "SparseMem ran out of space with size %d, increase size in ReplaceMemsTransform!", depth.U)
 }
-

@@ -1,5 +1,6 @@
 package rfuzz
 
+import chisel3.stage.ChiselStage
 import firrtl.Mappers._
 import firrtl.Utils.throwInternalError
 import firrtl._
@@ -16,7 +17,7 @@ object ReplaceMemsTransform {
   def getMem(tpe: Type, depth: BigInt, nR: Int, nW: Int, syncRead: Boolean): Module = {
     import chisel3._
     import chisel3.util.log2Ceil
-    val chirrtl = chisel3.Driver.emit(() => new Module {
+    val chirrtl = (new ChiselStage).emitChirrtl(new Module {
       override def desiredName = "IgnoreMe"
       def typeToData(tpe: Type): Data = tpe match {
         case UIntType(IntWidth(w)) => UInt(w.toInt.W)
