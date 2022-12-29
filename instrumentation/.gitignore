@@ -17,3 +17,6 @@ project/plugins/project/
 
 # tests
 test_run_dir/
+
+# mill
+out/
