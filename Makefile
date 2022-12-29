@@ -1,6 +1,5 @@
-
-FIR := Sodor3Stage.fir
 DUT := Sodor3Stage
+FIR := $(DUT).fir
 
 ROOT := $(shell pwd)
 BUILD := $(ROOT)/build
