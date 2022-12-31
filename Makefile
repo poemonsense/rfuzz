@@ -73,6 +73,9 @@ endif
 
 instrumentation: $(INSTRUMENTED_V) $(INSTRUMENTED_FIR) $(INSTRUMENTATION_TOML)
 
+idea:
+	cd instrumentation && mill -i mill.scalalib.GenIdea/idea
+
 ################################################################################
 # harness rules
 ################################################################################
@@ -131,4 +134,4 @@ run: $(FUZZ_SERVER) $(E2ECOV)
 	mkdir /tmp/fpga
 	$(FUZZ_SERVER)
 
-.PHONY: instrumentation run
+.PHONY: idea instrumentation run
